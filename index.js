@@ -6,9 +6,7 @@ var xtend = require('xtend');
 var Monitor = function(command, opts) {
 	events.EventEmitter.call(this);
 
-	// for Monitor-group
-	this.id = null;
-	this.outdated = false;
+	this.id = null; // for respawn-group
 
 	this.status = 'stopped';
 	this.command = command;
