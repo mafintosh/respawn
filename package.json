@@ -1,0 +1,13 @@
+{
+  "name": "respawn",
+  "version": "0.1.0",
+  "description": "Spawn a process and restart it if it crashes",
+  "repository": "git://github.com/mafintosh/respawn.git",
+  "author": "Mathias Buus <mathiasbuus@gmail.com>",
+  "dependencies": {
+    "xtend": "~2.1.1"
+  },
+  "scripts": {
+  	"test": "tap test/index.js"
+  }
+}
