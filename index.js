@@ -25,7 +25,7 @@ var Monitor = function(command, opts) {
 util.inherits(Monitor, events.EventEmitter);
 
 Monitor.prototype.stop = function(cb) {
-	if (this.status === 'stopped' || this.status === 'stopping') return;
+	if (this.status === 'stopped' || this.status === 'stopping') return cb && cb();
 	this.status = 'stopping';
 
 	clearTimeout(this.timeout);
