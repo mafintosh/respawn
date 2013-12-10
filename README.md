@@ -27,7 +27,7 @@ Optionally you can specify the command to to spawn in the option map as `command
 
 * `monitor.start()` Starts the monitor
 
-* `monitor.stop()` Stops the monitor (kills the process if its running with SIGTERM)
+* `monitor.stop(cb)` Stops the monitor (kills the process if its running with SIGTERM)
 
 * `monitor.status` Get the current monitor status. Available values are `running`, `stopping`, `stopped` and `sleeping`
 
@@ -48,6 +48,21 @@ Optionally you can specify the command to to spawn in the option map as `command
 * `monitor.on('stderr', data)` child process stderr has emitted data
 
 * `monitor.on('warn', err)` child process has emitted an error
+
+## Graceful restart
+
+To do graceful restart simply have your app stop gracefully when receiving `SIGTERM` and do
+
+``` js
+// graceful restart (do not wait for old process to die)
+monitor.stop();
+monitor.start();
+
+// hard restart (wait for old process to die)
+monitor.stop(function() {
+	monitor.start();
+});
+```
 
 ## License
 
