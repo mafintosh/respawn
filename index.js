@@ -24,11 +24,16 @@ var Monitor = function(command, opts) {
 
 util.inherits(Monitor, events.EventEmitter);
 
-Monitor.prototype.stop = function() {
+Monitor.prototype.stop = function(cb) {
 	if (this.status === 'stopped' || this.status === 'stopping') return;
 	this.status = 'stopping';
 
 	clearTimeout(this.timeout);
+
+	if (cb) {
+		if (this.child) this.child.on('exit', cb);
+		else process.nextTick(cb);
+	}
 
 	if (this.child) this.child.kill();
 	else this._stopped();
