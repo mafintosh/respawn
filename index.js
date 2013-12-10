@@ -10,7 +10,7 @@ var Monitor = function(command, opts) {
 
 	this.status = 'stopped';
 	this.command = command;
-	this.cwd = opts.cwd || process.cwd();
+	this.cwd = opts.cwd || '.';
 	this.env = opts.env || {};
 	this.pid = 0;
 
