@@ -5,6 +5,7 @@ var respawn = require('../index');
 var crash = path.join(__dirname, 'apps', 'crash.js');
 var run = path.join(__dirname, 'apps', 'run.js');
 var hello = path.join(__dirname, 'apps', 'hello-world.js');
+var env = path.join(__dirname, 'apps', 'env.js');
 var node = process.execPath;
 
 test('restart', function(t) {
@@ -159,6 +160,25 @@ test('forward stdio', function(t) {
 
 	mon.on('stop', function() {
 		t.same(Buffer.concat(buf).toString('utf-8'), 'hello world\nhello world\n');
+	});
+
+	mon.start();
+});
+
+test('env', function(t) {
+	t.plan(1);
+
+	process.env.TEST_A = 'TEST_A';
+
+	var mon = respawn([node, env], {env:{TEST_B:'TEST_B'}, maxRestarts:1, sleep:1});
+	var buf = [];
+
+	mon.on('stdout', function(data) {
+		buf.push(data);
+	});
+
+	mon.on('stop', function() {
+		t.same(Buffer.concat(buf).toString('utf-8'), 'TEST_A\nTEST_B\nTEST_A\nTEST_B\n');
 	});
 
 	mon.start();
