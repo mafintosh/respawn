@@ -58,6 +58,8 @@ Monitor.prototype.start = function() {
 		self.pid = child.pid;
 		self.emit('spawn', child);
 
+		child.setMaxListeners(0);
+
 		child.stdout.on('data', function(data) {
 			self.emit('stdout', data);
 		});
