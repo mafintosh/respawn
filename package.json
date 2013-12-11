@@ -8,6 +8,9 @@
     "xtend": "~2.1.1"
   },
   "scripts": {
-  	"test": "tap test/index.js"
+    "test": "tap test/index.js"
+  },
+  "devDependencies": {
+    "tap": "~0.4.6"
   }
 }
