@@ -4,6 +4,8 @@ Spawn a process and restart it if it crashes.
 
 	npm install respawn
 
+[![Build Status](https://travis-ci.org/mafintosh/respawn.png)](https://travis-ci.org/mafintosh/respawn)
+
 ## Usage
 
 It is easy to use
