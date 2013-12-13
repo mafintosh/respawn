@@ -12,5 +12,16 @@
   },
   "devDependencies": {
     "tap": "~0.4.6"
-  }
+  },
+  "keywords": [
+  	"spawn",
+	"restart",
+	"keep",
+	"alive"
+	"process",
+	"monitor",
+	"service",
+	"start",
+	"stop"
+  ]
 }
