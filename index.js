@@ -12,6 +12,8 @@ var Monitor = function(command, opts) {
 	this.command = command;
 	this.cwd = opts.cwd || '.';
 	this.env = opts.env || {};
+	this.uid = opts.uid;
+	this.gid = opts.gid;
 	this.pid = 0;
 
 	this.sleep = opts.sleep || 1000;
@@ -49,7 +51,9 @@ Monitor.prototype.start = function() {
 	var loop = function() {
 		var child = spawn(self.command[0], self.command.slice(1), {
 			cwd: self.cwd,
-			env: xtend(process.env, self.env)
+			env: xtend(process.env, self.env),
+			uid: self.uid,
+			gid: self.gid
 		});
 
 		self.started = new Date();
