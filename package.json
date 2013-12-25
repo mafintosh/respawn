@@ -1,6 +1,6 @@
 {
   "name": "respawn",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "Spawn a process and restart it if it crashes",
   "repository": "git://github.com/mafintosh/respawn.git",
   "author": "Mathias Buus <mathiasbuus@gmail.com>",
