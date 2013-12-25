@@ -15,6 +15,7 @@ var Monitor = function(command, opts) {
 	this.uid = opts.uid;
 	this.gid = opts.gid;
 	this.pid = 0;
+	this.windowsVerbatimArguments = opts.windowsVerbatimArguments;
 
 	this.sleep = opts.sleep || 1000;
 	this.maxRestarts = opts.maxRestarts || 10;
@@ -53,7 +54,8 @@ Monitor.prototype.start = function() {
 			cwd: self.cwd,
 			env: xtend(process.env, self.env),
 			uid: self.uid,
-			gid: self.gid
+			gid: self.gid,
+			windowsVerbatimArguments: self.windowsVerbatimArguments
 		});
 
 		self.started = new Date();
