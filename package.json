@@ -5,7 +5,8 @@
   "repository": "git://github.com/mafintosh/respawn.git",
   "author": "Mathias Buus <mathiasbuus@gmail.com>",
   "dependencies": {
-    "xtend": "~2.1.1"
+    "xtend": "~2.1.1",
+    "tree-kill": "0.0.6"
   },
   "scripts": {
     "test": "tap test/index.js"
@@ -14,14 +15,14 @@
     "tap": "~0.4.6"
   },
   "keywords": [
-  	"spawn",
-	"restart",
-	"keep",
-	"alive",
-	"process",
-	"monitor",
-	"service",
-	"start",
-	"stop"
+    "spawn",
+    "restart",
+    "keep",
+    "alive",
+    "process",
+    "monitor",
+    "service",
+    "start",
+    "stop"
   ]
 }

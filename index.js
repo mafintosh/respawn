@@ -1,5 +1,6 @@
 var events = require('events');
 var spawn = require('child_process').spawn;
+var kill = require('tree-kill');
 var util = require('util');
 var xtend = require('xtend');
 
@@ -38,7 +39,7 @@ Monitor.prototype.stop = function(cb) {
 		else process.nextTick(cb);
 	}
 
-	if (this.child) this.child.kill();
+	if (this.child) kill(this.child.pid);
 	else this._stopped();
 };
 
