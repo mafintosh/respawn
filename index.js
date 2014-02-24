@@ -101,7 +101,9 @@ Monitor.prototype.start = function() {
 				restarts = 0;
 			}
 
-			if (++restarts > self.maxRestarts) return self.stop();
+			if (++restarts > self.maxRestarts && self.maxRestarts != -1) {
+				return self.stop();
+			}
 
 			self.status = 'sleeping';
 			self.emit('sleep');
