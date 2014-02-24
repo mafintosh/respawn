@@ -31,6 +31,23 @@ test('restart', function(t) {
 	mon.start();
 });
 
+test('infinite restart', function(t) {
+	t.plan(1);
+
+	var mon = respawn([node, crash], {maxRestarts:-1, sleep:1});
+
+	var spawned = 0;
+
+	mon.on('spawn', function() {
+		if (spawned++ > 0) {
+			t.ok(true, 'spawn more than once');
+			mon.stop();
+		}
+	});
+
+	mon.start();
+});
+
 test('stop', function(t) {
 	t.plan(2);
 
