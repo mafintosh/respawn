@@ -18,7 +18,8 @@ var monitor = respawn(['node', 'server.js'], {
 	cwd: '.',              // set cwd
 	maxRestarts:10,        // how many restarts are allowed within 60s
 	                       // or -1 for infinite restarts
-	sleep:1000,            // time to sleep between restarts
+	sleep:1000,            // time to sleep between restarts,
+	stdio: [...]           // forward stdio options
 });
 
 monitor.start(); // spawn and watch
