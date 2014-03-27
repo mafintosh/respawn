@@ -69,13 +69,17 @@ Monitor.prototype.start = function() {
 
 		child.setMaxListeners(0);
 
-		child.stdout.on('data', function(data) {
-			self.emit('stdout', data);
-		});
+		if (child.stdout) {
+			child.stdout.on('data', function(data) {
+				self.emit('stdout', data);
+			});
+		}
 
-		child.stderr.on('data', function(data) {
-			self.emit('stderr', data);
-		});
+		if (child.stderr) {
+			child.stderr.on('data', function(data) {
+				self.emit('stderr', data);
+			});
+		}
 
 		var clear = function() {
 			if (self.child !== child) return false;
