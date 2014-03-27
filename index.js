@@ -16,6 +16,7 @@ var Monitor = function(command, opts) {
 	this.uid = opts.uid;
 	this.gid = opts.gid;
 	this.pid = 0;
+	this.stdio = opts.stdio;
 	this.windowsVerbatimArguments = opts.windowsVerbatimArguments;
 
 	this.sleep = opts.sleep || 1000;
@@ -56,6 +57,7 @@ Monitor.prototype.start = function() {
 			env: xtend(process.env, self.env),
 			uid: self.uid,
 			gid: self.gid,
+			stdio: self.stdio,
 			windowsVerbatimArguments: self.windowsVerbatimArguments
 		});
 
