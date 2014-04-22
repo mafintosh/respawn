@@ -1,8 +1,26 @@
 var events = require('events');
 var spawn = require('child_process').spawn;
-var kill = require('tree-kill');
+var ps = require('ps-tree');
 var util = require('util');
 var xtend = require('xtend');
+
+var kill = function(pid) {
+	ps(pid, function(_, pids) {
+		pids = (pids || []).map(function(item) {
+			return parseInt(item.PID, 10);
+		});
+
+		pids.push(pid);
+
+		pids.forEach(function(pid) {
+			try {
+				process.kill(pid);
+			} catch (err) {
+				// do nothing
+			}
+		});
+	});
+};
 
 var Monitor = function(command, opts) {
 	events.EventEmitter.call(this);
