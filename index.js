@@ -37,6 +37,7 @@ var Monitor = function(command, opts) {
 	this.stdio = opts.stdio;
 	this.windowsVerbatimArguments = opts.windowsVerbatimArguments;
 
+	this.crashed = false;
 	this.sleep = opts.sleep || 1000;
 	this.maxRestarts = opts.maxRestarts || 10;
 
@@ -110,7 +111,7 @@ Monitor.prototype.start = function() {
 			self.emit('warn', err); // too opionated? maybe just forward err
 			if (!clear()) return;
 			if (self.status === 'stopping') return self._stopped();
-			self.stop();
+			self._crash();
 		});
 
 		child.on('exit', function(code, signal) {
@@ -125,9 +126,7 @@ Monitor.prototype.start = function() {
 				restarts = 0;
 			}
 
-			if (++restarts > self.maxRestarts && self.maxRestarts != -1) {
-				return self.stop();
-			}
+			if (++restarts > self.maxRestarts && self.maxRestarts != -1) return self._crash();
 
 			self.status = 'sleeping';
 			self.emit('sleep');
@@ -160,10 +159,16 @@ Monitor.prototype.toJSON = function() {
 	return doc;
 };
 
+Monitor.prototype._crash = function() {
+	if (this.status !== 'running') return;
+	this.status = 'crashed';
+	this.emit('crash');
+	if (this.status === 'crashed') this._stopped();
+};
+
 Monitor.prototype._stopped = function() {
 	if (this.status === 'stopped') return;
-	this.status = 'stopped';
-
+	if (this.status !== 'crashed') this.status = 'stopped';
 	this.started = null;
 	this.emit('stop');
 };
