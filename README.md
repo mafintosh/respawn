@@ -33,13 +33,15 @@ Optionally you can specify the command to to spawn in the option map as `command
 
 * `monitor.stop(cb)` Stops the monitor (kills the process if its running with SIGTERM)
 
-* `monitor.status` Get the current monitor status. Available values are `running`, `stopping`, `stopped` and `sleeping`
+* `monitor.status` Get the current monitor status. Available values are `running`, `stopping`, `stopped`, `crashed` and `sleeping`
 
 ## Events
 
 * `monitor.on('start')` The monitor has started
 
 * `monitor.on('stop')`  The monitor has fully stopped and the process is killed
+
+* `monitor.on('crash')`  The monitor has crashed (too many restarts or spawn error).
 
 * `monitor.on('sleep')` monitor is sleeping
 
