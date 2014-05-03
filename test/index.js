@@ -145,7 +145,7 @@ test('kill right away', function(t) {
 });
 
 test('kill running', function(t) {
-	t.plan(2);
+	t.plan(5);
 
 	var mon = respawn([node, crash], {maxRestarts:1, sleep:1});
 	var spawned = 0;
@@ -160,6 +160,7 @@ test('kill running', function(t) {
 	mon.on('stop', function() {
 		t.same(spawned, 2, 'spawned twice');
 		t.ok(true, 'should stop');
+		t.same(mon.status, 'crashed');
 	});
 
 	mon.start();
@@ -196,6 +197,39 @@ test('env', function(t) {
 
 	mon.on('stop', function() {
 		t.same(Buffer.concat(buf).toString('utf-8'), 'TEST_A\nTEST_B\nTEST_A\nTEST_B\n');
+	});
+
+	mon.start();
+});
+
+test('crash status', function(t) {
+	t.plan(2);
+
+	var mon = respawn(['non-existing-program']);
+
+	mon.on('stop', function() {
+		t.same(mon.status, 'crashed');
+	});
+
+	mon.on('crash', function() {
+		t.same(mon.status, 'crashed');
+	});
+
+	mon.start();
+});
+
+test('stop status', function(t) {
+	t.plan(2);
+
+	var mon = respawn([node, run]);
+
+	mon.on('stop', function() {
+		t.same(mon.status, 'stopped');
+	});
+
+	mon.on('spawn', function() {
+		mon.stop();
+		t.same(mon.status, 'stopping');
 	});
 
 	mon.start();
