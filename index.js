@@ -3,8 +3,17 @@ var spawn = require('child_process').spawn;
 var ps = require('ps-tree');
 var util = require('util');
 var xtend = require('xtend');
+var os = require('os');
 
 var kill = function(pid) {
+	if (os.platform() === 'win32') {
+		try {
+			process.kill(pid);
+		} catch (err) {
+			// do nothing
+		}
+		return;
+	}
 	ps(pid, function(_, pids) {
 		pids = (pids || []).map(function(item) {
 			return parseInt(item.PID, 10);
