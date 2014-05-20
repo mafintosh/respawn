@@ -1,5 +1,6 @@
 var events = require('events');
 var spawn = require('child_process').spawn;
+var exec = require('child_process').exec;
 var ps = require('ps-tree');
 var util = require('util');
 var xtend = require('xtend');
@@ -7,11 +8,7 @@ var os = require('os');
 
 var kill = function(pid) {
 	if (os.platform() === 'win32') {
-		try {
-			process.kill(pid);
-		} catch (err) {
-			// do nothing
-		}
+		exec('taskkill /pid ' + pid + ' /T /F');
 		return;
 	}
 	ps(pid, function(_, pids) {
