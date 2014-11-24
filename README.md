@@ -2,7 +2,9 @@
 
 Spawn a process and restart it if it crashes.
 
-	npm install respawn
+```
+npm install respawn
+```
 
 [![Build Status](https://travis-ci.org/mafintosh/respawn.png)](https://travis-ci.org/mafintosh/respawn)
 
@@ -11,18 +13,18 @@ Spawn a process and restart it if it crashes.
 It is easy to use
 
 ``` js
-var respawn = require('respawn');
+var respawn = require('respawn')
 
 var monitor = respawn(['node', 'server.js'], {
-	env: {ENV_VAR:'test'}, // set env vars
-	cwd: '.',              // set cwd
-	maxRestarts:10,        // how many restarts are allowed within 60s
-	                       // or -1 for infinite restarts
-	sleep:1000,            // time to sleep between restarts,
-	stdio: [...]           // forward stdio options
-});
+  env: {ENV_VAR:'test'}, // set env vars
+  cwd: '.',              // set cwd
+  maxRestarts:10,        // how many restarts are allowed within 60s
+                         // or -1 for infinite restarts
+  sleep:1000,            // time to sleep between restarts,
+  stdio: [...]           // forward stdio options
+})
 
-monitor.start(); // spawn and watch
+monitor.start() // spawn and watch
 ```
 
 Optionally you can specify the command to to spawn in the option map as `command: [...]`
@@ -61,13 +63,13 @@ To do graceful restart simply have your app stop gracefully when receiving `SIGT
 
 ``` js
 // graceful restart (do not wait for old process to die)
-monitor.stop();
-monitor.start();
+monitor.stop()
+monitor.start()
 
 // hard restart (wait for old process to die)
 monitor.stop(function() {
-	monitor.start();
-});
+  monitor.start()
+})
 ```
 
 ## License
