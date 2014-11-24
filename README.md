@@ -21,6 +21,7 @@ var monitor = respawn(['node', 'server.js'], {
   maxRestarts:10,        // how many restarts are allowed within 60s
                          // or -1 for infinite restarts
   sleep:1000,            // time to sleep between restarts,
+  kill:30000,            // wait 30s before force killing after stopping
   stdio: [...]           // forward stdio options
 })
 

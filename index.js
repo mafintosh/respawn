@@ -6,7 +6,7 @@ var util = require('util')
 var xtend = require('xtend')
 var os = require('os')
 
-var kill = function(pid) {
+var kill = function(pid, sig) {
   if (os.platform() === 'win32') {
     exec('taskkill /pid ' + pid + ' /T /F')
     return
@@ -20,7 +20,7 @@ var kill = function(pid) {
 
     pids.forEach(function(pid) {
       try {
-        process.kill(pid)
+        process.kill(pid, sig)
       } catch (err) {
         // do nothing
       }
@@ -46,6 +46,7 @@ var Monitor = function(command, opts) {
   this.crashed = false
   this.sleep = opts.sleep || 1000
   this.maxRestarts = opts.maxRestarts || 10
+  this.kill = opts.kill === false ? false : opts.kill || 30000
 
   this.child = null
   this.started = null
@@ -65,8 +66,24 @@ Monitor.prototype.stop = function(cb) {
     else process.nextTick(cb)
   }
 
-  if (this.child) kill(this.child.pid)
-  else this._stopped()
+  if (!this.child) return this._stopped()
+
+  var self = this
+  var sigkill = function() {
+    kill(self.child.pid, 'SIGKILL')
+    self.emit('force-kill')
+  }
+
+  var onexit = function() {
+    clearTimeout(wait)
+  }
+
+  if (this.kill !== false) {
+    var wait = setTimeout(sigkill, this.kill)
+    this.child.on('exit', onexit)
+  }
+
+  kill(this.child.pid)
 }
 
 Monitor.prototype.start = function() {
