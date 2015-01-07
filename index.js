@@ -45,7 +45,7 @@ var Monitor = function(command, opts) {
 
   this.crashed = false
   this.sleep = opts.sleep || 1000
-  this.maxRestarts = opts.maxRestarts || 10
+  this.maxRestarts = opts.maxRestarts === 0 ? 0 : opts.maxRestarts || 10
   this.kill = opts.kill === false ? false : opts.kill || 30000
 
   this.child = null
