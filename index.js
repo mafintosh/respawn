@@ -69,8 +69,9 @@ Monitor.prototype.stop = function(cb) {
   if (!this.child) return this._stopped()
 
   var self = this
+  var child = self.child
   var sigkill = function() {
-    kill(self.child.pid, 'SIGKILL')
+    kill(child.pid, 'SIGKILL')
     self.emit('force-kill')
   }
 
