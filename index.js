@@ -44,7 +44,7 @@ var Monitor = function(command, opts) {
   this.windowsVerbatimArguments = opts.windowsVerbatimArguments
 
   this.crashed = false
-  this.sleep = opts.sleep || 1000
+  this.sleep = Array.isArray(opts.sleep) ? opts.sleep : [opts.sleep || 1000]
   this.maxRestarts = opts.maxRestarts === 0 ? 0 : opts.maxRestarts || 10
   this.kill = opts.kill === false ? false : opts.kill || 30000
 
@@ -155,7 +155,8 @@ Monitor.prototype.start = function() {
       self.status = 'sleeping'
       self.emit('sleep')
 
-      self.timeout = setTimeout(loop, self.sleep)
+      var restartTimeout = self.sleep[restarts - 1] || self.sleep[self.sleep.length - 1]
+      self.timeout = setTimeout(loop, restartTimeout)
     })
   }
 
