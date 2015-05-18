@@ -27,7 +27,12 @@ var kill = function(pid, sig) {
     })
   })
 }
-
+var defaultSleep = function (sleep) {
+  sleep = Array.isArray(sleep) ? sleep : [sleep || 1000]
+  return function (restarts) {
+    return sleep[restarts - 1] || sleep[sleep.length - 1]
+  }
+}
 var Monitor = function(command, opts) {
   events.EventEmitter.call(this)
 
@@ -44,7 +49,7 @@ var Monitor = function(command, opts) {
   this.windowsVerbatimArguments = opts.windowsVerbatimArguments
 
   this.crashed = false
-  this.sleep = Array.isArray(opts.sleep) ? opts.sleep : [opts.sleep || 1000]
+  this.sleep = typeof opts.sleep === 'function' ? opts.sleep : defaultSleep(opts.sleep)
   this.maxRestarts = opts.maxRestarts === 0 ? 0 : opts.maxRestarts || 10
   this.kill = opts.kill === false ? false : opts.kill || 30000
 
@@ -155,7 +160,7 @@ Monitor.prototype.start = function() {
       self.status = 'sleeping'
       self.emit('sleep')
 
-      var restartTimeout = self.sleep[restarts - 1] || self.sleep[self.sleep.length - 1]
+      var restartTimeout = self.sleep(restarts)
       self.timeout = setTimeout(loop, restartTimeout)
     })
   }
