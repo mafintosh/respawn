@@ -50,7 +50,7 @@ var Monitor = function(command, opts) {
 
   this.crashed = false
   this.sleep = typeof opts.sleep === 'function' ? opts.sleep : defaultSleep(opts.sleep)
-  this.maxRestarts = opts.maxRestarts === 0 ? 0 : opts.maxRestarts || 10
+  this.maxRestarts = opts.maxRestarts === 0 ? 0 : opts.maxRestarts || -1
   this.kill = opts.kill === false ? false : opts.kill || 30000
 
   this.child = null
@@ -155,7 +155,7 @@ Monitor.prototype.start = function() {
         restarts = 0
       }
 
-      if (++restarts > self.maxRestarts && self.maxRestarts != -1) return self._crash()
+      if (++restarts > self.maxRestarts && self.maxRestarts !== -1) return self._crash()
 
       self.status = 'sleeping'
       self.emit('sleep')
