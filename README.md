@@ -30,6 +30,8 @@ monitor.start() // spawn and watch
 
 Optionally you can specify the command to to spawn in the option map as `command: [...]`
 
+Per default respawn will restart you app indefinitely. To set a max restart limit set the `maxRestarts` option.
+
 If `sleep` is an array of numbers it will use the value at the position of the current number of restarts as the timeout value. If the number of restarts exceed the length of the array it will use the last value in the array until it hits the maxRestarts.
 
 `sleep: [1000, 60000, 60000, 12000, 1000]` will wait 1000ms before retrying, then it will wait 60000 before the next retry and so forth.
