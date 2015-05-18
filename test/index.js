@@ -236,27 +236,57 @@ test('stop status', function(t) {
   mon.start()
 })
 
-// test('restart using restart strategy', function (t) {
-//   var timeouts = [2, 100, 450, 40]
-//   var mon = respawn([node, crash], { maxRestarts: 5, sleep: timeouts})
-//   var times = [Date.now()]
-//   mon.on('sleep', function() {
-//     times.push(Date.now())
-//   })
-//   mon.on('crash', function() {
-//     times.forEach(function(current, key, times) {
-//       if (key <= 1) return
-//       var previous = times[key - 1]
-//       var timeout = timeouts[key - 2] || 0
-//       var delta = (current - previous)
-//       var gracePeriod = 75
-//       t.ok(delta - timeout < gracePeriod, util.format(
-//         'should trigger shortly after defined timeout. '
-//       + 'Got %d ms, should have stayed within %d-%d ms',
-//         delta, timeout, timeout + gracePeriod)
-//       )
-//     })
-//     t.end()
-//   })
-//   mon.start()
-// })
+test('restart using restart strategy', function (t) {
+  var timeouts = [2, 100, 450, 40]
+  var mon = respawn([node, crash], { maxRestarts: 5, sleep: timeouts})
+  var times = [Date.now()]
+  mon.on('sleep', function() {
+    times.push(Date.now())
+  })
+  mon.on('crash', function() {
+    times.forEach(function(current, key, times) {
+      if (key <= 1) return
+      var previous = times[key - 1]
+      var timeout = (timeouts[key - 2] || 0) + 100
+      var delta = (current - previous)
+      var gracePeriod = 75
+      t.ok(delta - timeout < gracePeriod, util.format(
+        'should trigger shortly after defined timeout. '
+      + 'Got %d ms, should have stayed within %d-%d ms',
+        delta, timeout, timeout + gracePeriod)
+      )
+    })
+    t.end()
+  })
+  mon.start()
+})
+
+test('restart using restart strategy function', function (t) {
+  var timeouts = [50, 100, 200, 400]
+  var mon = respawn([node, crash], {
+    maxRestarts: 5,
+    sleep: function(i) {
+      return 50 << (i - 1)
+    }
+  })
+  var times = [Date.now()]
+  mon.on('sleep', function() {
+    times.push(Date.now())
+  })
+  mon.on('crash', function() {
+    times.forEach(function(current, key, times) {
+      if (key <= 1) return
+      var previous = times[key - 1]
+      var timeout = (timeouts[key - 2] || 0) + 100
+      var delta = (current - previous)
+      var gracePeriod = 75
+      t.ok(delta - timeout < gracePeriod, util.format(
+        'should trigger shortly after defined timeout. '
+      + 'Got %d ms, should have stayed within %d-%d ms',
+        delta, timeout, timeout + gracePeriod)
+      )
+    })
+    t.end()
+  })
+  mon.start()
+})

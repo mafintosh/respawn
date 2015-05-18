@@ -34,6 +34,8 @@ If `sleep` is an array of numbers it will use the value at the position of the c
 
 `sleep: [1000, 60000, 60000, 12000, 1000]` will wait 1000ms before retrying, then it will wait 60000 before the next retry and so forth.
 
+If `sleep` is a function it will be passed the number of times (including this one) that the app has been restarted (i.e. first time will be called with 1, second time 2 etc.) and should return a time in milliseconds.
+
 ## API
 
 * `monitor.start()` Starts the monitor
