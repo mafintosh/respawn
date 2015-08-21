@@ -120,7 +120,7 @@ Monitor.prototype.start = function() {
 
   var loop = function() {
     var child = self.cluster ? cluster.fork(xtend(process.env, self.env)) :
-    spwn(self.command[0], self.command.slice(1), {
+    spawn(self.command[0], self.command.slice(1), {
       cwd: self.cwd,
       env: xtend(process.env, self.env),
       uid: self.uid,
