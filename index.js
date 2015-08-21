@@ -1,5 +1,6 @@
 var events = require('events')
 var spawn = require('child_process').spawn
+var cluster = require('cluster')
 var exec = require('child_process').exec
 var ps = require('ps-tree')
 var util = require('util')
@@ -42,11 +43,29 @@ var Monitor = function(command, opts) {
   this.command = command
   this.cwd = opts.cwd || '.'
   this.env = opts.env || {}
+  this.cluster = opts.mode === 'cluster'
   this.uid = opts.uid
   this.gid = opts.gid
   this.pid = 0
   this.stdio = opts.stdio
   this.windowsVerbatimArguments = opts.windowsVerbatimArguments
+
+  if (this.cluster) {
+    process.cwd(this.cwd);
+    var settings = {};
+    if (this.uid) {
+      process.setuid(this.uid);
+      settings.uid = this.uid;
+    }
+    if (this.gid) {
+      process.setgid(this.gid);
+      settings.gid = this.gid;
+    }
+    var args = command.slice(1);
+    settings.exec = args.shift();
+    settings.args = args;
+    cluster.setupMaster(settings);
+  }
 
   this.crashed = false
   this.sleep = typeof opts.sleep === 'function' ? opts.sleep : defaultSleep(opts.sleep)
@@ -100,7 +119,8 @@ Monitor.prototype.start = function() {
   var clock = 60000
 
   var loop = function() {
-    var child = spawn(self.command[0], self.command.slice(1), {
+    var child = self.cluster ? cluster.fork(xtend(process.env, self.env)) :
+    spwn(self.command[0], self.command.slice(1), {
       cwd: self.cwd,
       env: xtend(process.env, self.env),
       uid: self.uid,
@@ -176,6 +196,7 @@ Monitor.prototype.toJSON = function() {
     id: this.id,
     status: this.status,
     started: this.started,
+    cluster: this.cluster,
     pid: this.pid,
     command: this.command,
     cwd: this.cwd,
