@@ -100,7 +100,7 @@ Monitor.prototype.start = function() {
   var clock = 60000
 
   var loop = function() {
-    var cmd = (typeof(self.command)=='function' ? self.command() : self.command)
+    var cmd = typeof self.command === 'function' ? self.command() : self.command
     var child = spawn(cmd[0], cmd.slice(1), {
       cwd: self.cwd,
       env: xtend(process.env, self.env),
@@ -205,7 +205,7 @@ Monitor.prototype._stopped = function() {
 }
 
 var respawn = function(command, opts) {
-  if (typeof(command) != 'function' && !Array.isArray(command)) return respawn(command.command, command)
+  if (typeof command !== 'function' && !Array.isArray(command)) return respawn(command.command, command)
   return new Monitor(command, opts || {})
 }
 
