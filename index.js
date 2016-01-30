@@ -46,6 +46,8 @@ var Monitor = function(command, opts) {
   this.gid = opts.gid
   this.pid = 0
   this.stdio = opts.stdio
+  this.stdout = opts.stdout
+  this.stderr = opts.stderr
   this.windowsVerbatimArguments = opts.windowsVerbatimArguments
 
   this.crashed = false
@@ -122,12 +124,20 @@ Monitor.prototype.start = function() {
       child.stdout.on('data', function(data) {
         self.emit('stdout', data)
       })
+      
+      if (self.stdout) {
+        child.stdout.pipe(self.stdout)
+      }
     }
 
     if (child.stderr) {
       child.stderr.on('data', function(data) {
         self.emit('stderr', data)
       })
+      
+      if (self.stderr) {
+        child.stderr.pipe(self.stderr)
+      }
     }
 
     var clear = function() {
