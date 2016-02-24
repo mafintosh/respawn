@@ -40,6 +40,7 @@ var Monitor = function(command, opts) {
 
   this.status = 'stopped'
   this.command = command
+  this.name = opts.name
   this.cwd = opts.cwd || '.'
   this.env = opts.env || {}
   this.uid = opts.uid
@@ -185,6 +186,7 @@ Monitor.prototype.start = function() {
 Monitor.prototype.toJSON = function() {
   var doc = {
     id: this.id,
+    name: this.name,
     status: this.status,
     started: this.started,
     pid: this.pid,
@@ -195,6 +197,7 @@ Monitor.prototype.toJSON = function() {
 
   if (!doc.id) delete doc.id
   if (!doc.pid) delete doc.pid
+  if (!doc.name) delete doc.name
   if (!doc.started) delete doc.started
 
   return doc
