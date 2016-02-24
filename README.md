@@ -16,6 +16,7 @@ It is easy to use
 var respawn = require('respawn')
 
 var monitor = respawn(['node', 'server.js'], {
+  name: 'test',          // set monitor name
   env: {ENV_VAR:'test'}, // set env vars
   cwd: '.',              // set cwd
   maxRestarts:10,        // how many restarts are allowed within 60s
