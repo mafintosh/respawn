@@ -43,6 +43,7 @@ var Monitor = function(command, opts) {
   this.name = opts.name
   this.cwd = opts.cwd || '.'
   this.env = opts.env || {}
+  this.data = opts.data || {}
   this.uid = opts.uid
   this.gid = opts.gid
   this.pid = 0
@@ -194,12 +195,14 @@ Monitor.prototype.toJSON = function() {
     crashes: this.crashes,
     command: this.command,
     cwd: this.cwd,
-    env: this.env
+    env: this.env,
+    data: this.data
   }
 
   if (!doc.id) delete doc.id
   if (!doc.pid) delete doc.pid
   if (!doc.name) delete doc.name
+  if (!doc.data) delete doc.data
   if (!doc.started) delete doc.started
   if (!doc.crashes) delete doc.crashes
 
