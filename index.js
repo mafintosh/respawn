@@ -43,9 +43,11 @@ var Monitor = function(command, opts) {
   this.name = opts.name
   this.cwd = opts.cwd || '.'
   this.env = opts.env || {}
+  this.data = opts.data || {}
   this.uid = opts.uid
   this.gid = opts.gid
   this.pid = 0
+  this.crashes = 0
   this.stdio = opts.stdio
   this.stdout = opts.stdout
   this.stderr = opts.stderr
@@ -125,7 +127,7 @@ Monitor.prototype.start = function() {
       child.stdout.on('data', function(data) {
         self.emit('stdout', data)
       })
-      
+
       if (self.stdout) {
         child.stdout.pipe(self.stdout)
       }
@@ -135,7 +137,7 @@ Monitor.prototype.start = function() {
       child.stderr.on('data', function(data) {
         self.emit('stderr', data)
       })
-      
+
       if (self.stderr) {
         child.stderr.pipe(self.stderr)
       }
@@ -190,15 +192,19 @@ Monitor.prototype.toJSON = function() {
     status: this.status,
     started: this.started,
     pid: this.pid,
+    crashes: this.crashes,
     command: this.command,
     cwd: this.cwd,
-    env: this.env
+    env: this.env,
+    data: this.data
   }
 
   if (!doc.id) delete doc.id
   if (!doc.pid) delete doc.pid
   if (!doc.name) delete doc.name
+  if (!doc.data) delete doc.data
   if (!doc.started) delete doc.started
+  if (!doc.crashes) delete doc.crashes
 
   return doc
 }
@@ -206,6 +212,7 @@ Monitor.prototype.toJSON = function() {
 Monitor.prototype._crash = function() {
   if (this.status !== 'running') return
   this.status = 'crashed'
+  this.crashes = this.crashes++
   this.emit('crash')
   if (this.status === 'crashed') this._stopped()
 }
