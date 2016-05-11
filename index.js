@@ -204,7 +204,6 @@ Monitor.prototype.toJSON = function() {
   if (!doc.name) delete doc.name
   if (!doc.data) delete doc.data
   if (!doc.started) delete doc.started
-  if (!doc.crashes) delete doc.crashes
 
   return doc
 }
