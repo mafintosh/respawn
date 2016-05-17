@@ -204,7 +204,6 @@ Monitor.prototype.toJSON = function() {
   if (!doc.name) delete doc.name
   if (!doc.data) delete doc.data
   if (!doc.started) delete doc.started
-  if (!doc.crashes) delete doc.crashes
 
   return doc
 }
@@ -212,7 +211,7 @@ Monitor.prototype.toJSON = function() {
 Monitor.prototype._crash = function() {
   if (this.status !== 'running') return
   this.status = 'crashed'
-  this.crashes = this.crashes++
+  this.crashes++
   this.emit('crash')
   if (this.status === 'crashed') this._stopped()
 }
