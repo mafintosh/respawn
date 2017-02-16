@@ -290,3 +290,26 @@ test('restart using restart strategy function', function (t) {
   })
   mon.start()
 })
+
+test('fork', function(t) {
+  t.plan(5)
+
+  var mon = respawn([crash], {maxRestarts:1, sleep:1, fork:true})
+
+  var spawned = 0
+  var exited = 0
+
+  mon.on('spawn', function() {
+    t.ok(spawned++ < 2, 'less than 2 spawns')
+  })
+
+  mon.on('exit', function() {
+    t.ok(exited++ < 2, 'less than 2 exits')
+  })
+
+  mon.on('stop', function() {
+    t.ok(true, 'should stop')
+  })
+
+  mon.start()
+})
