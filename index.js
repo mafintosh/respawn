@@ -1,5 +1,6 @@
 var events = require('events')
 var spawn = require('child_process').spawn
+var fork = require('child_process').fork
 var exec = require('child_process').exec
 var ps = require('ps-tree')
 var util = require('util')
@@ -51,7 +52,11 @@ var Monitor = function(command, opts) {
   this.stdio = opts.stdio
   this.stdout = opts.stdout
   this.stderr = opts.stderr
+  this.silent = opts.silent
   this.windowsVerbatimArguments = opts.windowsVerbatimArguments
+  this.spawnFn = opts.fork
+    ? fork
+    : spawn
 
   this.crashed = false
   this.sleep = typeof opts.sleep === 'function' ? opts.sleep : defaultSleep(opts.sleep)
@@ -106,12 +111,13 @@ Monitor.prototype.start = function() {
 
   var loop = function() {
     var cmd = typeof self.command === 'function' ? self.command() : self.command
-    var child = spawn(cmd[0], cmd.slice(1), {
+    var child = self.spawnFn(cmd[0], cmd.slice(1), {
       cwd: self.cwd,
       env: xtend(process.env, self.env),
       uid: self.uid,
       gid: self.gid,
       stdio: self.stdio,
+      silent: self.silent,
       windowsVerbatimArguments: self.windowsVerbatimArguments
     })
 
@@ -142,6 +148,10 @@ Monitor.prototype.start = function() {
         child.stderr.pipe(self.stderr)
       }
     }
+
+    child.on('message', function(message) {
+      self.emit('message', message)
+    })
 
     var clear = function() {
       if (self.child !== child) return false

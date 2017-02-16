@@ -7,6 +7,7 @@ var crash = path.join(__dirname, 'apps', 'crash.js')
 var run = path.join(__dirname, 'apps', 'run.js')
 var hello = path.join(__dirname, 'apps', 'hello-world.js')
 var env = path.join(__dirname, 'apps', 'env.js')
+var fork = path.join(__dirname, 'apps', 'fork.js')
 var node = process.execPath
 
 test('restart', function(t) {
@@ -288,5 +289,25 @@ test('restart using restart strategy function', function (t) {
     })
     t.end()
   })
+  mon.start()
+})
+
+test('fork', function(t) {
+  t.plan(1)
+
+  var mon = respawn([fork], {fork:true, maxRestarts:1, sleep:1})
+  var messages = []
+
+  mon.on('message', function(message) {
+    messages.push(message)
+  })
+
+  mon.on('stop', function() {
+    t.deepEqual(messages, [
+      {foo: 'bar'},
+      {foo: 'bar'}
+    ])
+  })
+
   mon.start()
 })
