@@ -149,6 +149,10 @@ Monitor.prototype.start = function() {
       }
     }
 
+    child.on('message', function(message) {
+      self.emit('message', message)
+    })
+
     var clear = function() {
       if (self.child !== child) return false
       self.child = null
