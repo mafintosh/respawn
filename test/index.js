@@ -311,3 +311,16 @@ test('fork', function(t) {
 
   mon.start()
 })
+
+test('crashes', function(t) {
+  t.plan(1)
+
+  var mon = respawn([node, crash], {maxRestarts:1, sleep:1})
+  var spawned = 0
+
+  mon.once('stop', function() {
+    t.same(mon.crashes, 2);
+  })
+
+  mon.start()
+})

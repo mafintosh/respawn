@@ -179,6 +179,8 @@ Monitor.prototype.start = function() {
         restarts = 0
       }
 
+      self.crashes++
+
       if (++restarts > self.maxRestarts && self.maxRestarts !== -1) return self._crash()
 
       self.status = 'sleeping'
@@ -221,7 +223,6 @@ Monitor.prototype.toJSON = function() {
 Monitor.prototype._crash = function() {
   if (this.status !== 'running') return
   this.status = 'crashed'
-  this.crashes++
   this.emit('crash')
   if (this.status === 'crashed') this._stopped()
 }
