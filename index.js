@@ -164,6 +164,7 @@ Monitor.prototype.start = function() {
       self.emit('warn', err) // too opionated? maybe just forward err
       if (!clear()) return
       if (self.status === 'stopping') return self._stopped()
+      self.crashes++
       self._crash()
     })
 
