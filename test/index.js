@@ -1,6 +1,8 @@
 var test = require('tap').test
 var path = require('path')
 var util = require('util')
+var os = require('os')
+var fs = require('fs')
 var respawn = require('../index')
 
 var crash = path.join(__dirname, 'apps', 'crash.js')
@@ -8,6 +10,7 @@ var run = path.join(__dirname, 'apps', 'run.js')
 var hello = path.join(__dirname, 'apps', 'hello-world.js')
 var env = path.join(__dirname, 'apps', 'env.js')
 var fork = path.join(__dirname, 'apps', 'fork.js')
+var forkExecPath = path.join(__dirname, 'apps', 'forkExecPath.js')
 var node = process.execPath
 
 test('restart', function(t) {
@@ -310,4 +313,46 @@ test('fork', function(t) {
   })
 
   mon.start()
+})
+
+test('fork with a custom execPath and execArgv', function(t) {
+	t.plan(1)
+
+	var mon
+	var messages = []
+
+	var symlinkName = os.platform() === 'win32' ? 'node-symlink.exe' : 'node-symlink'
+	var symlinkPath = path.join(__dirname, symlinkName)
+	var execArgv = ['--preserve-symlinks']
+
+	fs.symlink(node, symlinkName, () => {
+		mon = respawn([forkExecPath], {
+			fork:true,
+			maxRestarts:1,
+			sleep:1,
+			execPath: symlinkPath,
+			execArgv: execArgv
+		})
+
+		mon.on('message', function(message) {
+			messages.push(message)
+		})
+
+		mon.on('stop', function() {
+			t.deepEqual(messages, [
+				{execPath: symlinkPath, execArgv: execArgv},
+				{execPath: symlinkPath, execArgv: execArgv}
+			])
+		})
+
+		mon.start()
+	})
+
+	t.tearDown(() => {
+		if (fs.existsSync(symlinkPath)) {
+			fs.unlinkSync(symlinkPath, (err) => {
+				if (err) console.error(err)
+			})
+		}
+	})
 })
