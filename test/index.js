@@ -348,9 +348,9 @@ test('fork with a custom execPath and execArgv', function(t) {
 		mon.start()
 	})
 
-	t.tearDown(() => {
+	t.tearDown(function() {
 		if (fs.existsSync(symlinkPath)) {
-			fs.unlinkSync(symlinkPath, (err) => {
+			fs.unlinkSync(symlinkPath, function(err) {
 				if (err) console.error(err)
 			})
 		}
