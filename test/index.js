@@ -325,7 +325,7 @@ test('fork with a custom execPath and execArgv', function(t) {
 	var symlinkPath = path.join(__dirname, symlinkName)
 	var execArgv = ['--preserve-symlinks']
 
-	fs.symlink(node, symlinkName, () => {
+	fs.symlink(node, symlinkName, function() {
 		mon = respawn([forkExecPath], {
 			fork:true,
 			maxRestarts:1,
