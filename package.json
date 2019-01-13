@@ -6,7 +6,7 @@
   "author": "Mathias Buus <mathiasbuus@gmail.com>",
   "dependencies": {
     "xtend": "~2.1.1",
-    "ps-tree": "0.0.3"
+    "ps-tree": "~1.2.0"
   },
   "scripts": {
     "test": "tap test/index.js"
