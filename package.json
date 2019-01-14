@@ -5,14 +5,14 @@
   "repository": "git://github.com/mafintosh/respawn.git",
   "author": "Mathias Buus <mathiasbuus@gmail.com>",
   "dependencies": {
-    "xtend": "~2.1.1",
-    "ps-tree": "~1.2.0"
+    "ps-tree": "^1.2.0",
+    "xtend": "^4.0.1"
   },
   "scripts": {
-    "test": "tap test/index.js"
+    "test": "tape test/index.js"
   },
   "devDependencies": {
-    "tap": "~0.4.6"
+    "tape": "^4.9.2"
   },
   "keywords": [
     "spawn",

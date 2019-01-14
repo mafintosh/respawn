@@ -1,4 +1,4 @@
-var test = require('tap').test
+var test = require('tape')
 var path = require('path')
 var util = require('util')
 var respawn = require('../index')
@@ -129,8 +129,6 @@ test('start stop start', function(t) {
 })
 
 test('kill right away', function(t) {
-  t.plan(2)
-
   var mon = respawn([node, crash], {maxRestarts:1, sleep:1})
   var spawned = 0
 
@@ -140,6 +138,7 @@ test('kill right away', function(t) {
 
   mon.on('stop', function() {
     t.ok(true, 'should stop')
+    t.end()
   })
 
   mon.start()
