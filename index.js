@@ -54,6 +54,8 @@ var Monitor = function(command, opts) {
   this.stderr = opts.stderr
   this.silent = opts.silent
   this.windowsVerbatimArguments = opts.windowsVerbatimArguments
+  this.execPath = opts.execPath
+  this.execArgv = opts.execArgv
   this.spawnFn = opts.fork
     ? fork
     : spawn
@@ -118,6 +120,8 @@ Monitor.prototype.start = function() {
       gid: self.gid,
       stdio: self.stdio,
       silent: self.silent,
+      execPath: self.execPath,
+      execArgv: self.execArgv,
       windowsVerbatimArguments: self.windowsVerbatimArguments
     })
 

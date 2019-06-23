@@ -25,6 +25,8 @@ var monitor = respawn(['node', 'server.js'], {
   kill:30000,            // wait 30s before force killing after stopping
   stdio: [...],          // forward stdio options
   fork: true             // fork instead of spawn
+  execPath: 'exec/path'  // executable used to create the child process, if `fork` is `true`
+  execArgv: [...],       // list of string arguments passed to the executable, if `fork` is `true`
 })
 
 monitor.start() // spawn and watch
